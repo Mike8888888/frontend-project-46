@@ -5,5 +5,4 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - uses: action@checkout@3
-      - name: Print Hello World
       - run: echo 'Hello world'
