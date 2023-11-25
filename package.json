@@ -8,7 +8,7 @@
       "gendiff": "src/gendiff.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "M. Klimenko",
   "license": "ISC",
