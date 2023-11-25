@@ -4,7 +4,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps: 
-      - name: Print Hello
-        uses: actions/checkout@v3
-        
-      - run: echo 'Hello world'
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm install
+      - run: npm lint
+      - name: run tests
+        run: npm test
