@@ -1,6 +1,11 @@
 /* eslint-disable no-undef */
 /* eslint-disable quote-props */
+import path from 'node:path';
+import fs from 'node:fs';
+import process from 'node:process';
 import gendiff from '../src/compareJsons.js';
+
+const readFile = (filePath) => JSON.parse(fs.readFileSync(path.resolve(process.cwd(), filePath), 'utf-8'));
 
 const correctResult = [
   '- follow: false',
@@ -25,17 +30,8 @@ const withEmptyJson = [
   '- timeout: 50',
 ];
 
-const json1 = {
-  'host': 'hexlet.io',
-  'timeout': 50,
-  'proxy': '123.234.53.22',
-  'follow': false,
-};
-const json2 = {
-  'timeout': 20,
-  'verbose': true,
-  'host': 'hexlet.io',
-};
+const json1 = readFile('__fixtures__/file1.json');
+const json2 = readFile('__fixtures__/file2.json');
 
 const emptyJson = {};
 
