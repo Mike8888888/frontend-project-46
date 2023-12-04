@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import parseToJson from './parseToJson.js';
+import parseToJson from './parser.js';
 import compareJsons from './compareJsons.js';
 
 const program = new Command();
