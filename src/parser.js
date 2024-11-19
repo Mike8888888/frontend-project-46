@@ -11,6 +11,4 @@ function parseToJson(filepath) {
   return JSON.parse(fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf8'));
 }
 
-//one more line
-
 export default parseToJson;
