@@ -1,11 +1,10 @@
+/* eslint-disable array-callback-return */
 import _ from 'lodash';
 
 function compareJsons(obj1, obj2) {
   const keys = Object.keys({ ...obj1, ...obj2 });
-
+  const result = [];
   keys.map((key) => {
-    const result = [];
-
     if (
       Object.hasOwn(obj1, key)
       && Object.hasOwn(obj2, key)
@@ -46,8 +45,8 @@ function compareJsons(obj1, obj2) {
         state: 'unchanged',
       });
     }
-    return result;
   });
+  return result;
 }
 
 export default compareJsons;
