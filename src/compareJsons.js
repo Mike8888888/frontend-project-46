@@ -1,45 +1,53 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-function compareJsons(file1, file2) {
-  const file1PropsArray = Object.keys(file1);
-  const file2PropsArray = Object.keys(file2);
-  const result = [];
+import _ from 'lodash';
 
-  file1PropsArray.map((key) => {
-    switch (Object.hasOwn(file1, key)) {
-      case Object.hasOwn(file2, key):
-        if (file1[key] === file2[key]) {
-          result.push(`  ${key}: ${file1[key]}`);
-          return result;
-        }
-        result.push(`- ${key}: ${file1[key]}`);
-        result.push(`+ ${key}: ${file2[key]}`);
-        break;
+function compareJsons(obj1, obj2) {
+  const keys = Object.keys({ ...obj1, ...obj2 });
 
-      case !Object.hasOwn(file2, key):
-        result.push(`- ${key}: ${file1[key]}`);
-        break;
+  keys.map((key) => {
+    const result = [];
 
-      default:
-        return result.push('error');
+    if (
+      Object.hasOwn(obj1, key)
+      && Object.hasOwn(obj2, key)
+      && _.isObject(obj1[key])
+      && _.isObject(obj2[key])) {
+      result.push({
+        key,
+        value: compareJsons(obj1[key], obj2[key]),
+        state: 'nested',
+      });
+    } else if (!Object.hasOwn(obj1, key)) {
+      result.push({
+        key,
+        value: obj2[key],
+        state: 'added',
+      });
+    } else if (!Object.hasOwn(obj2, key)) {
+      result.push({
+        key,
+        value: obj1[key],
+        state: 'deleted',
+      });
+    } else if (obj1[key] !== obj2[key]) {
+      result.push({
+        key,
+        value: obj1[key],
+        state: 'deleted',
+      });
+      result.push({
+        key,
+        value: obj2[key],
+        state: 'added',
+      });
+    } else {
+      result.push({
+        key,
+        value: obj1[key],
+        state: 'unchanged',
+      });
     }
+    return result;
   });
-
-  file2PropsArray.map((key) => {
-    if (!Object.hasOwn(file1, key)) {
-      result.push(`+ ${key}: ${file2[key]}`);
-    }
-  });
-  result.sort((a, b) => {
-    if (a[2] > b[2]) {
-      return 1;
-    }
-    if (a[2] < b[2]) {
-      return -1;
-    }
-    return 0;
-  });
-  return result;
 }
 
 export default compareJsons;
