@@ -4,7 +4,7 @@ import process from 'node:process';
 import yaml from 'js-yaml';
 
 function parseToJson(filepath) {
-  if (filepath.endsWith('.yml' && '.yaml')) {
+  if (filepath.endsWith('.yml' || '.yaml')) {
     return yaml.load(fs.readFileSync(path.resolve(process.cwd(), filepath), 'utf8'));
   }
 
