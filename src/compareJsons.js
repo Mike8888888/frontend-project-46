@@ -31,12 +31,8 @@ function compareJsons(obj1, obj2) {
       result.push({
         key,
         value: obj1[key],
-        state: 'deleted',
-      });
-      result.push({
-        key,
-        value: obj2[key],
-        state: 'added',
+        value2: obj2[key],
+        state: 'updated',
       });
     } else {
       result.push({

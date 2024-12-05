@@ -2,8 +2,8 @@
 
 import { Command } from 'commander';
 import compareJsons from './compareJsons.js';
-import stylish from './formatters/stylish.js';
 import parser from './parser.js';
+import getStyledResult from './formatters/index.js';
 
 const program = new Command();
 
@@ -16,12 +16,7 @@ program
   .action((filepath1, filepath2, options) => {
     const obj1 = parser(filepath1);
     const obj2 = parser(filepath2);
-    if (options.format === 'plain') {
-      console.log('plain formatter in progress');
-    } else {
-      console.log(stylish(compareJsons(obj1, obj2)));
-    }
-    console.log();
+    console.log(getStyledResult(options, compareJsons(obj1, obj2)));
   });
 
 program.parse();
