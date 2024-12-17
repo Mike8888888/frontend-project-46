@@ -1,10 +1,5 @@
 import _ from 'lodash';
 
-/**
- * Преобразует значение в строку для вывода.
- * @param {any} value - Значение для форматирования.
- * @returns {string} Форматированное значение.
- */
 const getSortedKeysArray = (keys) => {
   const result = keys.sort((a, b) => {
     const firstValue = a.key;
@@ -30,12 +25,6 @@ function formatValue(value) {
   return String(value);
 }
 
-/**
- * Рекурсивно преобразует дифф объект в текстовый формат.
- * @param {Array} diff - Дифф между объектами.
- * @param {string} path - Текущий путь к свойству.
- * @returns {string} Текстовый результат.
- */
 function formatDiff(diff, path = '') {
   const lines = getSortedKeysArray(diff).flatMap(({
     key, value, value2, state,
@@ -52,7 +41,7 @@ function formatDiff(diff, path = '') {
       case 'updated':
         return `Property '${propertyPath}' was updated. From ${formatValue(value)} to ${formatValue(value2)}`;
       case 'unchanged':
-        return null; // Пропускаем неизмененные свойства
+        return null;
       default:
         throw new Error(`Unknown state: ${state}`);
     }
