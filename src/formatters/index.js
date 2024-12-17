@@ -3,8 +3,8 @@ import plain from './plain.js';
 
 export default (options, diff) => {
   if (options.format === 'plain') {
-    plain(diff);
+    return plain(diff);
   } else {
-    stylish(diff);
+    return stylish(diff);
   }
 };
