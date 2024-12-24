@@ -1,13 +1,13 @@
 import stylish from './stylish.js';
 import plain from './plain.js';
-import JSON from './json.js';
+import json from './json.js';
 
 export default (options, diff) => {
   let result;
   if (options.format === 'plain') {
     result = plain(diff);
-  } else if (options.format === 'JSON') {
-    result = JSON(diff);
+  } else if (options.format === 'json') {
+    result = json(diff);
   } else {
     result = stylish(diff);
   }
