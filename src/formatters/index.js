@@ -4,9 +4,9 @@ import json from './json.js';
 
 export default (options, diff) => {
   let result;
-  if (options.format === 'plain') {
+  if (options === 'plain') {
     result = plain(diff);
-  } else if (options.format === 'json') {
+  } else if (options === 'json') {
     result = json(diff);
   } else {
     result = stylish(diff);
