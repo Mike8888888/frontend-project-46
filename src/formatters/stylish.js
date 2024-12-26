@@ -1,8 +1,9 @@
+/* eslint-disable no-else-return */
 import _ from 'lodash';
 
 const isNotComparedDiff = (diff) => !Array.isArray(diff);
 const getSortedKeysArray = (keys) => {
-  const result = keys.sort((a, b) => {
+  const result = keys.toSorted((a, b) => {
     const firstValue = a.key;
     const secondValue = b.key;
     if (firstValue > secondValue) {
@@ -17,17 +18,15 @@ const getSortedKeysArray = (keys) => {
 };
 
 const getUpdatedCase = (value, value2) => {
-  let updatedCase;
   if (_.isObject(value) && _.isObject(value2)) {
-    updatedCase = 'both objects';
+    return 'both objects';
   } else if (!_.isObject(value) && _.isObject(value2)) {
-    updatedCase = 'value 2 object';
+    return 'value 2 object';
   } else if (_.isObject(value) && !_.isObject(value2)) {
-    updatedCase = 'value 1 object';
+    return 'value 1 object';
   } else {
-    updatedCase = 'both not object';
+    return 'both not object';
   }
-  return updatedCase;
 };
 
 function stylish(obj) {
@@ -41,7 +40,7 @@ function stylish(obj) {
     if (isNotComparedDiff(diff)) {
       const keys = Object.keys(diff);
       const result = keys
-        .sort((a, b) => a - b)
+        .toSorted()
         .map((key) => {
           if (!_.isObject(diff[key])) {
             return `${currentIndent}${key}: ${diff[key]}`;
