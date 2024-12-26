@@ -1,7 +1,7 @@
 import _ from 'lodash';
 
 const getSortedKeysArray = (keys) => {
-  const result = keys.sort((a, b) => {
+  const result = keys.toSorted((a, b) => {
     const firstValue = a.key;
     const secondValue = b.key;
     if (firstValue > secondValue) {
