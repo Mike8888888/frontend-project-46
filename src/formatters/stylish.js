@@ -1,32 +1,16 @@
-/* eslint-disable no-else-return */
 import _ from 'lodash';
 
 const isNotComparedDiff = (diff) => !Array.isArray(diff);
-const getSortedKeysArray = (keys) => {
-  const result = keys.toSorted((a, b) => {
-    const firstValue = a.key;
-    const secondValue = b.key;
-    if (firstValue > secondValue) {
-      return 1;
-    }
-    if (secondValue > firstValue) {
-      return -1;
-    }
-    return 0;
-  });
-  return result;
-};
 
 const getUpdatedCase = (value, value2) => {
   if (_.isObject(value) && _.isObject(value2)) {
     return 'both objects';
-  } else if (!_.isObject(value) && _.isObject(value2)) {
+  } if (!_.isObject(value) && _.isObject(value2)) {
     return 'value 2 object';
-  } else if (_.isObject(value) && !_.isObject(value2)) {
+  } if (_.isObject(value) && !_.isObject(value2)) {
     return 'value 1 object';
-  } else {
-    return 'both not object';
   }
+  return 'both not object';
 };
 
 function stylish(obj) {
@@ -40,7 +24,6 @@ function stylish(obj) {
     if (isNotComparedDiff(diff)) {
       const keys = Object.keys(diff);
       const result = keys
-        .toSorted()
         .map((key) => {
           if (!_.isObject(diff[key])) {
             return `${currentIndent}${key}: ${diff[key]}`;
@@ -53,7 +36,7 @@ function stylish(obj) {
         `${bracketIndent}}`,
       ].join('\n');
     }
-    const result = getSortedKeysArray(diff)
+    const result = diff
       .map(({
         key, value, state, value2,
       }) => {

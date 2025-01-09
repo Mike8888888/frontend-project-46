@@ -1,20 +1,5 @@
 import _ from 'lodash';
 
-const getSortedKeysArray = (keys) => {
-  const result = keys.toSorted((a, b) => {
-    const firstValue = a.key;
-    const secondValue = b.key;
-    if (firstValue > secondValue) {
-      return 1;
-    }
-    if (secondValue > firstValue) {
-      return -1;
-    }
-    return 0;
-  });
-  return result;
-};
-
 function formatValue(value) {
   if (_.isObject(value)) {
     return '[complex value]';
@@ -26,7 +11,7 @@ function formatValue(value) {
 }
 
 function formatDiff(diff, path = '') {
-  const lines = getSortedKeysArray(diff).flatMap(({
+  const lines = diff.flatMap(({
     key, value, value2, state,
   }) => {
     const propertyPath = path ? `${path}.${key}` : key;

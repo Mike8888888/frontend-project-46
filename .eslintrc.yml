@@ -2,10 +2,11 @@ env:
   node: true
 extends: airbnb-base
 parserOptions:
-  ecmaVersion: latest
+  ecmaVersion: 2020
   sourceType: module
 rules:
   no-console: 0
+  no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
   import/extensions:
     - error
     - js: always

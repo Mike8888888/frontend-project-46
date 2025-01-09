@@ -1,12 +1,9 @@
-/* eslint-disable no-shadow */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-else-return */
-/* eslint-disable no-undef */
-/* eslint-disable array-callback-return */
 import _ from 'lodash';
 
 function compareJsons(obj1, obj2) {
-  const keys = Object.keys({ ...obj1, ...obj2 });
+  const allKeys = Object.keys({ ...obj1, ...obj2 });
+  const keysSorted = _.sortBy(allKeys);
+
   function getAST(keys) {
     const cb = (result, key) => {
       if (
@@ -21,7 +18,7 @@ function compareJsons(obj1, obj2) {
             state: 'nested',
           },
         ];
-      } else if (!Object.hasOwn(obj1, key)) {
+      } if (!Object.hasOwn(obj1, key)) {
         return [
           ...result, {
             key,
@@ -29,7 +26,7 @@ function compareJsons(obj1, obj2) {
             state: 'added',
           },
         ];
-      } else if (!Object.hasOwn(obj2, key)) {
+      } if (!Object.hasOwn(obj2, key)) {
         return [
           ...result, {
             key,
@@ -37,7 +34,7 @@ function compareJsons(obj1, obj2) {
             state: 'deleted',
           },
         ];
-      } else if (obj1[key] !== obj2[key]) {
+      } if (obj1[key] !== obj2[key]) {
         return [
           ...result, {
             key,
@@ -46,21 +43,20 @@ function compareJsons(obj1, obj2) {
             state: 'updated',
           },
         ];
-      } else {
-        return [
-          ...result, {
-            key,
-            value: obj1[key],
-            state: 'unchanged',
-          },
-        ];
       }
+      return [
+        ...result, {
+          key,
+          value: obj1[key],
+          state: 'unchanged',
+        },
+      ];
     };
 
     const ast = keys.reduce(cb, []);
     return ast;
   }
-  return getAST(keys);
+  return getAST(keysSorted);
 }
 
 export default compareJsons;
