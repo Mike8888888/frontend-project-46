@@ -6,6 +6,10 @@ test('Different JSONs', () => {
   expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish')).toMatch(result.correctResult);
 });
 
+test('Default formatter', () => {
+  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json')).toMatch(result.correctResult);
+});
+
 test('YAMLs', () => {
   expect(genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'stylish')).toEqual(result.correctResult);
 });

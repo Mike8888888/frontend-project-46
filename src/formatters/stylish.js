@@ -2,89 +2,50 @@ import _ from 'lodash';
 
 const isNotComparedDiff = (diff) => !Array.isArray(diff);
 
-const getUpdatedCase = (value, value2) => {
-  if (_.isObject(value) && _.isObject(value2)) {
-    return 'both objects';
-  } if (!_.isObject(value) && _.isObject(value2)) {
-    return 'value 2 object';
-  } if (_.isObject(value) && !_.isObject(value2)) {
-    return 'value 1 object';
+const formatLine = (key, value, state, indent, depth, iter) => {
+  switch (state) {
+    case 'added':
+      return `${indent}+ ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
+    case 'deleted':
+      return `${indent}- ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
+    case 'unchanged':
+    case 'nested':
+      return `${indent}  ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
+    default:
+      throw new Error('Invalid state encountered');
   }
-  return 'both not object';
 };
 
-function stylish(obj) {
+function stylish(obj, spaceCount = 4) {
   const replacer = ' ';
-  const spaceCount = 4;
   const iter = (diff, depth) => {
     const indentSize = depth * spaceCount;
     const currentIndent = replacer.repeat(indentSize);
     const indentForChangedValue = replacer.repeat(indentSize - 2);
     const bracketIndent = replacer.repeat(indentSize - 4);
+
     if (isNotComparedDiff(diff)) {
       const keys = Object.keys(diff);
-      const result = keys
-        .map((key) => {
-          if (!_.isObject(diff[key])) {
-            return `${currentIndent}${key}: ${diff[key]}`;
-          }
-          return `${currentIndent}${key}: ${iter(diff[key], depth + 1)}`;
-        });
-      return [
-        '{',
-        ...result,
-        `${bracketIndent}}`,
-      ].join('\n');
+      const result = keys.map((key) => `${currentIndent}${key}: ${_.isObject(diff[key]) ? iter(diff[key], depth + 1) : diff[key]}`);
+      return ['{', ...result, `${bracketIndent}}`].join('\n');
     }
-    const result = diff
+
+    const result = diff.sort((a, b) => a.key.localeCompare(b.key))
       .map(({
         key, value, state, value2,
       }) => {
         if (state === 'updated') {
-          switch (getUpdatedCase(value, value2)) {
-            case 'both objects':
-              return `${indentForChangedValue}- ${key}: ${iter(value, depth + 1)}\n${indentForChangedValue}+ ${key}: ${iter(value2, depth + 1)}`;
-            case 'value 2 object':
-              return `${indentForChangedValue}- ${key}: ${value}\n${indentForChangedValue}+ ${key}: ${iter(value2, depth + 1)}`;
-            case 'value 1 object':
-              return `${indentForChangedValue}- ${key}: ${iter(value, depth + 1)}\n${indentForChangedValue}+ ${key}: ${value2}`;
-            case 'both not object':
-              return `${indentForChangedValue}- ${key}: ${value}\n${indentForChangedValue}+ ${key}: ${value2}`;
-            default:
-              console.error('Not valid case for updated');
-          }
+          return [
+            formatLine(key, value, 'deleted', indentForChangedValue, depth, iter),
+            formatLine(key, value2, 'added', indentForChangedValue, depth, iter),
+          ].join('\n');
         }
-        if (!_.isObject(value)) {
-          switch (state) {
-            case 'deleted':
-              return `${indentForChangedValue}- ${key}: ${value}`;
-            case 'added':
-              return `${indentForChangedValue}+ ${key}: ${value}`;
-            case 'unchanged':
-              return `${indentForChangedValue}  ${key}: ${value}`;
-            default:
-              return console.log('Not valid state');
-          }
-        }
-        switch (state) {
-          case 'deleted':
-            return `${indentForChangedValue}- ${key}: ${iter(value, depth + 1)}`;
-          case 'added':
-            return `${indentForChangedValue}+ ${key}: ${iter(value, depth + 1)}`;
-          case 'unchanged':
-            return `${indentForChangedValue}  ${key}: ${iter(value, depth + 1)}`;
-          case 'nested':
-            return `${indentForChangedValue}  ${key}: ${iter(value, depth + 1)}`;
-          default:
-            return console.error('Not valid state');
-        }
+        return formatLine(key, value, state, indentForChangedValue, depth, iter);
       });
-    return [
-      '{',
-      ...result,
-      `${bracketIndent}}`,
-    ].join('\n');
+
+    return ['{', ...result, `${bracketIndent}}`].join('\n');
   };
+
   return iter(obj, 1);
 }
 
