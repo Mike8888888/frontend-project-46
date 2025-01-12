@@ -30,7 +30,7 @@ function stylish(obj, spaceCount = 4) {
       return ['{', ...result, `${bracketIndent}}`].join('\n');
     }
 
-    const result = diff.sort((a, b) => a.key.localeCompare(b.key))
+    const result = diff
       .map(({
         key, value, state, value2,
       }) => {
