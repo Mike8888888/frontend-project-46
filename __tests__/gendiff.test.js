@@ -1,23 +1,35 @@
 /* eslint-disable no-undef */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'url';
+import path from 'node:path';
+import { dirname } from 'path';
 import genDiff from '../src/index.js';
-import * as result from '../__fixtures__/testAnswers.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+const readFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8');
+
+const correctResult = readFile('correctResult.txt');
+const plainResult = readFile('plainresult.txt');
+const jsonResult = readFile('jsonResult.txt');
 
 test('Different JSONs', () => {
-  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish')).toMatch(result.correctResult);
+  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish')).toMatch(correctResult);
 });
 
 test('Default formatter', () => {
-  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json')).toMatch(result.correctResult);
+  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json')).toMatch(correctResult);
 });
 
 test('YAMLs', () => {
-  expect(genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'stylish')).toEqual(result.correctResult);
+  expect(genDiff('__fixtures__/file1.yml', '__fixtures__/file2.yml', 'stylish')).toEqual(correctResult);
 });
 
 test('Plain format test', () => {
-  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'plain')).toEqual(result.plainFormatResult);
+  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'plain')).toEqual(plainResult);
 });
 
 test('JSON format test', () => {
-  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'json')).toEqual(result.jsonResult);
+  expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'json')).toEqual(jsonResult);
 });

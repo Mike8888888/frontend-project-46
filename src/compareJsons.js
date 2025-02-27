@@ -14,7 +14,7 @@ function compareJsons(obj1, obj2) {
         return [
           ...result, {
             key,
-            value: compareJsons(obj1[key], obj2[key]),
+            children: compareJsons(obj1[key], obj2[key]),
             state: 'nested',
           },
         ];
@@ -53,8 +53,7 @@ function compareJsons(obj1, obj2) {
       ];
     };
 
-    const ast = keys.reduce(cb, []);
-    return ast;
+    return keys.reduce(cb, []);
   }
   return getAST(keysSorted);
 }

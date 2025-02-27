@@ -1,11 +1,12 @@
 import yaml from 'js-yaml';
 
 function parseToJson(file, extension) {
-  if (extension === ('.yml' || '.yaml')) {
-    return yaml.load(file);
+  switch (extension) {
+    case '.yml' || '.yaml':
+      return yaml.load(file);
+    default:
+      return JSON.parse(file);
   }
-
-  return JSON.parse(file);
 }
 
 export default parseToJson;

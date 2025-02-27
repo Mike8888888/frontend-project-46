@@ -9,7 +9,9 @@ export default (options, diff) => {
       return plain(diff);
     case 'json':
       return json(diff);
-    default:
+    case 'stylish':
       return stylish(diff);
+    default:
+      throw new Error('Unknown format!');
   }
 };

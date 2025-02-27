@@ -12,13 +12,13 @@ function formatValue(value) {
 
 function formatDiff(diff, path = '') {
   const lines = diff.flatMap(({
-    key, value, value2, state,
+    key, value, value2, state, children,
   }) => {
     const propertyPath = path ? `${path}.${key}` : key;
 
     switch (state) {
       case 'nested':
-        return formatDiff(value, propertyPath);
+        return formatDiff(children, propertyPath);
       case 'added':
         return `Property '${propertyPath}' was added with value: ${formatValue(value)}`;
       case 'deleted':

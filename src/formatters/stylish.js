@@ -1,52 +1,41 @@
 import _ from 'lodash';
 
-const isNotComparedDiff = (diff) => !Array.isArray(diff);
+const depthIndent = 4;
 
-const formatLine = (key, value, state, indent, depth, iter) => {
-  switch (state) {
-    case 'added':
-      return `${indent}+ ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
-    case 'deleted':
-      return `${indent}- ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
-    case 'unchanged':
-    case 'nested':
-      return `${indent}  ${key}: ${_.isObject(value) ? iter(value, depth + 1) : value}`;
-    default:
-      throw new Error('Invalid state encountered');
-  }
-};
-
-function stylish(obj, spaceCount = 4) {
-  const replacer = ' ';
-  const iter = (diff, depth) => {
-    const indentSize = depth * spaceCount;
-    const currentIndent = replacer.repeat(indentSize);
-    const indentForChangedValue = replacer.repeat(indentSize - 2);
-    const bracketIndent = replacer.repeat(indentSize - 4);
-
-    if (isNotComparedDiff(diff)) {
-      const keys = Object.keys(diff);
-      const result = keys.map((key) => `${currentIndent}${key}: ${_.isObject(diff[key]) ? iter(diff[key], depth + 1) : diff[key]}`);
-      return ['{', ...result, `${bracketIndent}}`].join('\n');
-    }
-
-    const result = diff
-      .map(({
-        key, value, state, value2,
-      }) => {
-        if (state === 'updated') {
-          return [
-            formatLine(key, value, 'deleted', indentForChangedValue, depth, iter),
-            formatLine(key, value2, 'added', indentForChangedValue, depth, iter),
-          ].join('\n');
-        }
-        return formatLine(key, value, state, indentForChangedValue, depth, iter);
-      });
-
-    return ['{', ...result, `${bracketIndent}}`].join('\n');
-  };
-
-  return iter(obj, 1);
+function currentIndent(depth) {
+  return ' '.repeat(depth * depthIndent - 2); // ' '.repeat(depth * depthIndent - 2);
 }
 
-export default stylish;
+const stringify = (value, depth) => {
+  console.log(`Depth is ${depth}. Value is ${value}`);
+  if (!_.isObject(value)) {
+    return value;
+  }
+  const isObject = Object.entries(value);
+  console.log(`Depth in object type is ${depth}. Val is ${isObject[0]}`);
+  return Object
+    .entries(value)
+    .map(([key, val]) => (
+      `{\n${currentIndent(depth + 1)}  ${key}: ${stringify(val, depth + 1)}\n${currentIndent(depth)}  }`
+    )).join('\n');
+};
+
+export default (obj) => {
+  const iter = (diff, depth) => diff.map((node) => {
+    switch (node.state) {
+      case 'added':
+        return `${currentIndent(depth)}+ ${node.key}: ${stringify(node.value, depth)}\n`;
+      case 'deleted':
+        return `${currentIndent(depth)}- ${node.key}: ${stringify(node.value, depth)}\n`;
+      case 'unchanged':
+        return `${currentIndent(depth)}  ${node.key}: ${stringify(node.value, depth)}\n`;
+      case 'updated':
+        return `${currentIndent(depth)}- ${node.key}: ${stringify(node.value, depth)}\n${currentIndent(depth)}+ ${node.key}: ${stringify(node.value2, depth)}\n`;
+      case 'nested':
+        return `${currentIndent(depth)}  ${node.key}: {\n${iter(node.children, depth + 1).join('')}${currentIndent(depth)}  }\n`;
+      default:
+        throw new Error('Type is not defined');
+    }
+  });
+  return `{\n${iter(obj, 1).join('')}}`;
+};
