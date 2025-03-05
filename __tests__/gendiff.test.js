@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 const readFile = (filepath) => readFileSync(join(__dirname, '..', '__fixtures__', filepath), 'utf8');
 
 const correctResult = readFile('correctResult.txt');
-const plainResult = readFile('plainresult.txt');
+const plainResult = readFile('plainResult.txt');
 const jsonResult = readFile('jsonResult.txt');
 
 test('Different JSONs', () => {
