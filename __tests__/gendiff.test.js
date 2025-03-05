@@ -6,7 +6,7 @@ import genDiff from '../src/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const readFile = (filepath) => readFileSync(join(__dirname, '..', filepath), 'utf8');
+const readFile = (filepath) => readFileSync(join(filepath), 'utf8');
 
 const correctResult = readFile('__fixtures__/correctResult.txt');
 const plainResult = readFile('__fixtures__/plainresult.txt');
