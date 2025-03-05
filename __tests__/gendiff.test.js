@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
 import genDiff from '../src/index.js';
 
