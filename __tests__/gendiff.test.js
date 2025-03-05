@@ -1,11 +1,8 @@
 /* eslint-disable no-undef */
 import { readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { join, dirname } from 'path';
+import { join } from 'path';
 import genDiff from '../src/index.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const readFile = (filepath) => readFileSync(join(filepath), 'utf8');
 
 const correctResult = readFile('__fixtures__/correctResult.txt');
