@@ -1,10 +1,16 @@
 /* eslint-disable no-undef */
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { join, dirname } from 'path';
 import genDiff from '../src/index.js';
-import readFile from '../src/readFile.js';
 
-const correctResult = readFile('__fixtures__/correctResult.txt');
-const plainResult = readFile('__fixtures__/plainresult.txt');
-const jsonResult = readFile('__fixtures__/jsonResult.txt');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const readFile = (filepath) => readFileSync(join(__dirname, '..', '__fixtures__', filepath), 'utf8');
+
+const correctResult = readFile('correctResult.txt');
+const plainResult = readFile('plainresult.txt');
+const jsonResult = readFile('jsonResult.txt');
 
 test('Different JSONs', () => {
   expect(genDiff('__fixtures__/file1.json', '__fixtures__/file2.json', 'stylish')).toMatch(correctResult);
