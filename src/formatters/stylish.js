@@ -3,21 +3,19 @@ import _ from 'lodash';
 const depthIndent = 4;
 
 function currentIndent(depth) {
-  return ' '.repeat(depth * depthIndent - 2); // ' '.repeat(depth * depthIndent - 2);
+  return ' '.repeat(depth * depthIndent - 2);
 }
 
 const stringify = (value, depth) => {
-  console.log(`Depth is ${depth}. Value is ${value}`);
   if (!_.isObject(value)) {
     return value;
   }
-  const isObject = Object.entries(value);
-  console.log(`Depth in object type is ${depth}. Val is ${isObject[0]}`);
-  return Object
+  const lines = Object
     .entries(value)
     .map(([key, val]) => (
-      `{\n${currentIndent(depth + 1)}  ${key}: ${stringify(val, depth + 1)}\n${currentIndent(depth)}  }`
-    )).join('\n');
+      `${currentIndent(depth + 1)}  ${key}: ${stringify(val, depth + 1)}`
+    ));
+  return ['{', ...lines, `${currentIndent(depth)}  }`].join('\n');
 };
 
 export default (obj) => {
